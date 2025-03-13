@@ -1,47 +1,18 @@
 <template>
   <div class="row">
-    <!-- <div class="col-12 d-flex justify-content-center mt-5">
-      <img :src="imageUrl1" alt="Mental Health Header" class="mx-auto responsive-image" />
-    </div> -->
+    <div class="col-12 d-flex justify-content-center mt-5">
+      <!-- <img :src="imageUrl1" alt="Mental Health Header" class="mx-auto responsive-image" /> -->
+    </div>
     <div
       class="brief column mt-3 text-center"
       style="display: flex; flex-direction: column; align-items: center; background-color: white"
     >
-      <!-- <img :src="/images/sun-safety.jpg" :alt="welcome page" class="header" /> -->
       <h1 class="col-lg-8 col-10 mt-5">Welcome to Home page</h1>
       <span class="col-lg-8 col-10 my-3" style="font-size: 1.25rem"> testing </span>
       <p class="col-lg-8 col-10 my-5" style="font-size: 1.25rem">testing</p>
     </div>
   </div>
 </template>
-
-<!-- <script>
-import imageUrl from '@/assets/images/mentalHealth.jpg'
-import imageUrl1 from '@/assets/images/homeHeader3.png'
-
-export default {
-  data() {
-    return {
-      imageUrl,
-      imageUrl1,
-    }
-  },
-  methods: {
-    goToBooking() {
-      this.$router.push('/booking')
-    },
-    goToResource() {
-      this.$router.push('/resourceView')
-    },
-    goToParent() {
-      this.$router.push('/forParentView')
-    },
-    goToAbout() {
-      this.$router.push('/contact')
-    },
-  },
-}
-</script> -->
 
 <style scoped>
 .responsive-image {

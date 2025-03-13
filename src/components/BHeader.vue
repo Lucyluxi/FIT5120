@@ -18,7 +18,7 @@
         <li><router-link to="/" class="nav-link px-2 link-secondary">Home</router-link></li>
         <li><router-link to="/uvindex" class="nav-link px-2">Protect your skin</router-link></li>
         <li><router-link to="/reminder" class="nav-link px-2">Facts and stat</router-link></li>
-        <li><router-link to="/products" class="nav-link px-2">Products</router-link></li>
+        <!-- <li><router-link to="/products" class="nav-link px-2">Products</router-link></li> -->
       </ul>
 
       <div class="col-md-3 text-end">
