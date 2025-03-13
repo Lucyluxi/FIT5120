@@ -7,6 +7,7 @@
       class="brief column mt-3 text-center"
       style="display: flex; flex-direction: column; align-items: center; background-color: white"
     >
+      <!-- <img :src="/images/sun-safety.jpg" :alt="welcome page" class="header" /> -->
       <h1 class="col-lg-8 col-10 mt-5">Welcome to Home page</h1>
       <span class="col-lg-8 col-10 my-3" style="font-size: 1.25rem"> testing </span>
       <p class="col-lg-8 col-10 my-5" style="font-size: 1.25rem">testing</p>
