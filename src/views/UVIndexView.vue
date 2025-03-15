@@ -33,13 +33,19 @@
       <!-- UV Index Gauge -->
       <div class="uv-index-container">
         <div class="uv-index-bar">
-          <div class="uv-indicator" :style="{ left: `${(weatherData.uvIndex / 15) * 100}%` }"></div>
+          <div class="uv-indicator" :style="{ left: `${(weatherData.uvIndex / 11) * 100}%` }"></div>
         </div>
         <div class="uv-labels">
           <span>Low</span>
-          <span>Medium</span>
+          <span>Moderate</span>
           <span>High</span>
+          <span>Very High</span>
+          <span>Extreme</span>
         </div>
+      </div>
+
+      <div class="image-container small">
+        <img src="/images/UVIndex.jpg" alt="UV Index photo" />
       </div>
 
       <!-- Sun Protection & Sunscreen Recommendation -->
@@ -177,11 +183,22 @@ export default {
 }
 .weather-container {
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 /* Hero image container */
 .image-container {
   margin-bottom: 30px;
   margin-top: 10px;
+}
+
+.image-container.small {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.image-container.small img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
 }
 
 /* Search input and button styling */
@@ -203,6 +220,7 @@ button {
   border-collapse: collapse;
   margin: 10px auto;
   font-size: 16px;
+  margin-bottom: 80px;
 }
 .weather-table td {
   padding: 10px;
@@ -217,12 +235,12 @@ button {
 .uv-index-container {
   text-align: center;
   margin: 20px auto;
-  width: 300px;
+  width: 500px;
 }
 .uv-index-bar {
   width: 100%;
   height: 15px;
-  background: linear-gradient(to right, green, yellow, orange, red, darkred);
+  background: linear-gradient(to right, green, yellow, orange, red, purple);
   position: relative;
   border-radius: 8px;
 }
@@ -238,6 +256,18 @@ button {
   justify-content: space-between;
   font-size: 14px;
 }
+
+.uv-labels span {
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.uv-labels span:nth-child(1) { color: green; }
+.uv-labels span:nth-child(2) { color: yellow; }
+.uv-labels span:nth-child(3) { color: orange; }
+.uv-labels span:nth-child(4) { color: red; } 
+.uv-labels span:nth-child(4) { color: purple; } /* Extreme */
 
 /* Sun Protection & Sunscreen Sections */
 .sun-protection-container {
