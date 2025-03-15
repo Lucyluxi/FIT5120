@@ -212,9 +212,9 @@ export default {
       if (!tone || uvIndex === undefined) return 0;
 
       const sunscreenTable = {
-        light: [0.5, 1, 1.5, 2, 2.5], // 浅色皮肤
-        medium: [0.4, 0.8, 1.2, 1.6, 2], // 中等皮肤
-        dark: [0.3, 0.6, 1, 1.4, 1.8], // 深色皮肤
+        light: [0.5, 1, 1.5, 2, 2.5],
+        medium: [0.4, 0.8, 1.2, 1.6, 2],
+        dark: [0.3, 0.6, 1, 1.4, 1.8],
       };
 
       let index = 0;
@@ -227,7 +227,7 @@ export default {
       return sunscreenTable[tone][index] || 0;
     };
 
-    // 更新防晒霜用量
+  
     const updateSunscreenAmount = () => {
       if (!weatherData.value || !weatherData.value.uvIndex) return;
 
@@ -237,7 +237,6 @@ export default {
       console.log(`UV Index: ${weatherData.value.uvIndex}, Skin Tone: ${skinTone.value}, Recommended TSP: ${tsp}, Water Drops: ${recommendedSunscreen.value}`);
     };
 
-    // 监听 UV Index 变化，自动更新防晒霜用量
     watch(() => weatherData.value?.uvIndex, updateSunscreenAmount);
 
     return {
