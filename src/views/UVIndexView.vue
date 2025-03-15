@@ -75,13 +75,53 @@
         </div>
       </div>
 
-      <!-- Sunscreen Reminder Toggle -->
+      <!-- Sunscreen Reminder Settings -->
       <div class="reminder-container">
         <h3>Get reminded to put on sunscreen!</h3>
-        <label class="toggle-switch">
-          <input type="checkbox" v-model="reminderActive" @change="startReminder" />
-          <span class="slider"></span>
-        </label>
+
+        <div class="image-container large">
+          <img src="/images/reminder.jpg" alt="Reminder" />
+        </div>
+
+        <div class="reminder-card">
+          <div class="reminder-option">
+            <label for="reminder-interval">Reminder Interval:</label>
+            <select v-model="selectedInterval" @change="updateReminder">
+              <option value="10800">Every 3 hours</option>
+              <option value="7200">Every 2 hours</option>
+              <option value="3600">Every 1 hour</option>
+              <option value="custom">Custom</option>
+            </select>
+            <input
+              v-if="selectedInterval === 'custom'"
+              type="number"
+              v-model="customInterval"
+              placeholder="Enter interval (seconds)"
+              @input="updateReminder"
+            />
+          </div>
+
+          <div class="reminder-option">
+            <label for="sunscreen-type">Sunscreen Type:</label>
+            <select v-model="sunscreenType">
+              <option value="water-resistant">Water-Resistant</option>
+              <option value="non-water-resistant">Non-Water-Resistant</option>
+            </select>
+          </div>
+
+          <div class="reminder-option">
+            <label for="spf-level">SPF Level:</label>
+            <input type="number" v-model="spfLevel" placeholder="Enter SPF (e.g., 30, 50)" />
+          </div>
+
+          <div class="reminder-option">
+            <label>Enable Reminder:</label>
+            <label class="toggle-switch">
+              <input type="checkbox" v-model="reminderActive" @change="startReminder" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -91,9 +131,7 @@
     <div v-if="showCountdownPopup" class="countdown-popup">
       <div class="popup-content">
         <h3>Reminder Active</h3>
-        <p>
-          Reapply sunscreen in: <strong>{{ countdown }}s</strong>
-        </p>
+        <p>Reapply sunscreen in: <strong>{{ countdown }}s</strong></p>
       </div>
     </div>
   </div>
@@ -106,52 +144,71 @@ import axios from 'axios'
 export default {
   setup() {
     const weatherData = ref(null)
-    const skinTone = ref('')
-    const recommendedSunscreen = ref(3)
+    const location = ref('')
+    const errorMessage = ref('')
     const reminderActive = ref(false)
     const showCountdownPopup = ref(false)
-    const countdown = ref(120 * 60) //
+    const countdown = ref(120 * 60)
+    const selectedInterval = ref('10800')
+    const customInterval = ref('')
+    const sunscreenType = ref('water-resistant')
+    const spfLevel = ref(30)
     let timer = null
 
-    // Start sunscreen reminder countdown
+
+    const updateReminder = () => {
+      if (selectedInterval.value === 'custom' && (!customInterval.value || customInterval.value <= 0)) {
+        errorMessage.value = 'Please enter a valid custom interval.'
+        return
+      }
+      errorMessage.value = ''
+    }
+
     const startReminder = () => {
-      if (reminderActive.value) {
-        showCountdownPopup.value = true
-        countdown.value = 120 * 60 //
-
-        timer = setInterval(() => {
-          if (countdown.value > 0) {
-            countdown.value--
-          } else {
-            clearInterval(timer)
-            showCountdownPopup.value = false
-            reminderActive.value = false
-
-            setTimeout(() => {
-              alert('Time to reapply your sunscreen! ☀️')
-            }, 500)
-          }
-        }, 1000)
-      } else {
+      if (!reminderActive.value) {
         clearInterval(timer)
         showCountdownPopup.value = false
+        return
       }
+
+      let interval =
+        selectedInterval.value === 'custom' ? parseInt(customInterval.value) : parseInt(selectedInterval.value)
+      if (isNaN(interval) || interval <= 0) {
+        errorMessage.value = 'Invalid interval.'
+        reminderActive.value = false
+        return
+      }
+
+      countdown.value = interval
+      showCountdownPopup.value = true
+
+      timer = setInterval(() => {
+        if (countdown.value > 0) {
+          countdown.value--
+        } else {
+          clearInterval(timer)
+          showCountdownPopup.value = false
+          reminderActive.value = false
+          setTimeout(() => {
+            alert('Time to reapply your sunscreen!')
+          }, 500)
+        }
+      }, 1000)
     }
 
     return {
       weatherData,
-      skinTone,
-      recommendedSunscreen,
+      location,
+      errorMessage,
       reminderActive,
       showCountdownPopup,
       countdown,
       startReminder,
-    }
-  },
-  data() {
-    return {
-      location: '',
-      errorMessage: '',
+      selectedInterval,
+      customInterval,
+      updateReminder,
+      sunscreenType,
+      spfLevel,
     }
   },
   methods: {
@@ -163,7 +220,7 @@ export default {
 
       try {
         this.errorMessage = ''
-        const response = await axios.get('http://127.0.0.1:5001/fit5120-b75ac/us-central1/weatherApi/weather', {  //http://localhost:3000/weather
+        const response = await axios.get('http://127.0.0.1:5001/fit5120-b75ac/us-central1/weatherApi/weather', {
           params: { location: this.location },
         })
 
@@ -175,6 +232,7 @@ export default {
   },
 }
 </script>
+
 
 <style scoped>
 /* Center align all content */
@@ -381,5 +439,54 @@ input:checked + .slider:before {
 .popup-content p {
   margin: 10px 0 0;
   font-size: 14px;
+}
+.reminder-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.reminder-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.reminder-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reminder-option {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.reminder-option label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.reminder-option select,
+.reminder-option input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 15%;
+}
+
+.toggle-switch input {
+  margin-left: 10px;
 }
 </style>
