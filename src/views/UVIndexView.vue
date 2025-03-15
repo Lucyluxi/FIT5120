@@ -49,6 +49,7 @@
       </div>
 
       <!-- Sun Protection & Sunscreen Recommendation -->
+      <!-- Sun Protection & Sunscreen Recommendation -->
       <div class="sun-protection-container">
         <div class="protection-tips">
           <h3>Protect Yourself from the Sun</h3>
@@ -59,14 +60,16 @@
           </div>
         </div>
 
+        <!-- Sunscreen Tips -->
         <div class="sunscreen-tips">
           <h3>Recommended Sunscreen Amount (tsp)</h3>
-          <select v-model="skinTone">
+          <select v-model="skinTone" @change="updateSunscreenAmount">
             <option disabled value="">Select skin tone</option>
             <option value="light">Light</option>
             <option value="medium">Medium</option>
             <option value="dark">Dark</option>
           </select>
+
           <div class="sunscreen-drops">
             <span v-for="(drop, index) in recommendedSunscreen" :key="index" class="drop">
               💧
@@ -138,21 +141,27 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue';
 import axios from 'axios'
 
 
 export default {
-  setup() {
+  props: {
+    weatherData: Object,
+  },
+  setup(props) {
     const weatherData = ref(null)
     const location = ref('')
     const errorMessage = ref('')
     const reminderActive = ref(false)
     const showCountdownPopup = ref(false)
-    const countdown = ref(3 * 3600) // 默认倒计时 3 小时（10800 秒）
-    const selectedInterval = ref('10800') // 默认 3 小时
+    const countdown = ref(3 * 3600)
+    const selectedInterval = ref('10800')
     const customInterval = ref('')
     let timer = null
+
+    const skinTone = ref('');
+    const recommendedSunscreen = ref(0);
 
     const formattedCountdown = computed(() => {
       const hours = Math.floor(countdown.value / 3600)
@@ -199,6 +208,38 @@ export default {
       }, 1000)
     }
 
+    const getRecommendedTsp = (uvIndex, tone) => {
+      if (!tone || uvIndex === undefined) return 0;
+
+      const sunscreenTable = {
+        light: [0.5, 1, 1.5, 2, 2.5], // 浅色皮肤
+        medium: [0.4, 0.8, 1.2, 1.6, 2], // 中等皮肤
+        dark: [0.3, 0.6, 1, 1.4, 1.8], // 深色皮肤
+      };
+
+      let index = 0;
+      if (uvIndex >= 1 && uvIndex <= 2) index = 0;
+      else if (uvIndex >= 3 && uvIndex <= 5) index = 1;
+      else if (uvIndex >= 6 && uvIndex <= 7) index = 2;
+      else if (uvIndex >= 8 && uvIndex <= 10) index = 3;
+      else if (uvIndex >= 11) index = 4;
+
+      return sunscreenTable[tone][index] || 0;
+    };
+
+    // 更新防晒霜用量
+    const updateSunscreenAmount = () => {
+      if (!weatherData.value || !weatherData.value.uvIndex) return;
+
+      const tsp = getRecommendedTsp(weatherData.value.uvIndex, skinTone.value);
+      recommendedSunscreen.value = Math.ceil(tsp / 0.5); // 1 💧 = 0.5 tsp
+
+      console.log(`UV Index: ${weatherData.value.uvIndex}, Skin Tone: ${skinTone.value}, Recommended TSP: ${tsp}, Water Drops: ${recommendedSunscreen.value}`);
+    };
+
+    // 监听 UV Index 变化，自动更新防晒霜用量
+    watch(() => weatherData.value?.uvIndex, updateSunscreenAmount);
+
     return {
       weatherData,
       location,
@@ -210,8 +251,12 @@ export default {
       startReminder,
       selectedInterval,
       customInterval,
-      updateReminder
+      updateReminder,
+      skinTone,
+      recommendedSunscreen,
+      updateSunscreenAmount
     }
+    
   },
   methods: {
     async fetchWeather() {
