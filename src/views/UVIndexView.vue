@@ -79,7 +79,7 @@
       <div class="reminder-container">
         <h3>Get reminded to put on sunscreen!</h3>
 
-        <div class="image-container large">
+        <div class="image-container ">
           <img src="/images/reminder.jpg" alt="Reminder" />
         </div>
 
@@ -131,15 +131,16 @@
     <div v-if="showCountdownPopup" class="countdown-popup">
       <div class="popup-content">
         <h3>Reminder Active</h3>
-        <p>Reapply sunscreen in: <strong>{{ countdown }}s</strong></p>
+        <p>Reapply sunscreen in: <strong>{{ formattedCountdown }}s</strong></p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
+
 
 export default {
   setup() {
@@ -148,13 +149,17 @@ export default {
     const errorMessage = ref('')
     const reminderActive = ref(false)
     const showCountdownPopup = ref(false)
-    const countdown = ref(120 * 60)
-    const selectedInterval = ref('10800')
+    const countdown = ref(3 * 3600) // 默认倒计时 3 小时（10800 秒）
+    const selectedInterval = ref('10800') // 默认 3 小时
     const customInterval = ref('')
-    const sunscreenType = ref('water-resistant')
-    const spfLevel = ref(30)
     let timer = null
 
+    const formattedCountdown = computed(() => {
+      const hours = Math.floor(countdown.value / 3600)
+      const minutes = Math.floor((countdown.value % 3600) / 60)
+      const seconds = countdown.value % 60
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+    })
 
     const updateReminder = () => {
       if (selectedInterval.value === 'custom' && (!customInterval.value || customInterval.value <= 0)) {
@@ -189,9 +194,7 @@ export default {
           clearInterval(timer)
           showCountdownPopup.value = false
           reminderActive.value = false
-          setTimeout(() => {
-            alert('Time to reapply your sunscreen!')
-          }, 500)
+          alert('Time to reapply your sunscreen!')
         }
       }, 1000)
     }
@@ -203,12 +206,11 @@ export default {
       reminderActive,
       showCountdownPopup,
       countdown,
+      formattedCountdown,
       startReminder,
       selectedInterval,
       customInterval,
-      updateReminder,
-      sunscreenType,
-      spfLevel,
+      updateReminder
     }
   },
   methods: {
