@@ -9,7 +9,7 @@
           <span class="highlight">18,257</span> new cases of melanoma of the  <br />
           skin will be diagnosed in Australia.
         </div>
-        <a href="https://your-link-here.com" class="click-here">Learn how to protect yourself →</a>
+        <router-link to="/uvindex" class="click-here">Learn how to protect yourself →</router-link>
       </div>
     </div>
   </div>
