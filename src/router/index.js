@@ -4,6 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import ProductsView from '@/views/ProductsView.vue'
 import ReminderView from '@/views/ReminderView.vue'
 import UVIndexView from '@/views/UVIndexView.vue'
+import TEST_main from '@/views/TEST_main.vue'
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     name: 'UVIndex',
     component: UVIndexView,
   },
+  {
+    path:'/test',
+    name:'Test',
+    component: TEST_main
+  }
 ]
 
 const router = createRouter({
