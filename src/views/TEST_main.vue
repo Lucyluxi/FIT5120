@@ -11,7 +11,9 @@
         @input="filterDropdown"
       />
       <select v-model="selectedLocation" class="form-select mt-2" size="5">
-        <option v-for="location in filteredLocations" :key="location">{{ location }}</option>
+        <option v-for="(location, index) in filteredLocations" :key="`${location}-${index}`">
+          {{ location }}
+        </option>
       </select>
       <button class="btn btn-primary mt-2 w-100" @click="applyFilter">Search</button>
     </div>
@@ -49,17 +51,32 @@ export default {
     });
 
     async function loadCSV() {
-      const response = await fetch("/data/australian_postcodes.csv");
-      const csvText = await response.text();
-      Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          allData.value = results.data;
-          filteredLocations.value = [...new Set(allData.value.map(row => row.locality))];
-          displayRandomMarkers();
-        },
-      });
+      try {
+        const response = await fetch("/data/australian_postcodes.csv");
+        if (!response.ok) throw new Error("Failed to load CSV");
+
+        const csvText = await response.text();
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            allData.value = results.data;
+            const uniqueLocations = new Set();
+            filteredLocations.value = results.data
+              .map(row => row.locality)
+              .filter(loc => {
+                if (!uniqueLocations.has(loc)) {
+                  uniqueLocations.add(loc);
+                  return true;
+                }
+                return false;
+              });
+            displayRandomMarkers();
+          },
+        });
+      } catch (error) {
+        console.error("Error loading CSV:", error);
+      }
     }
 
     function filterDropdown() {

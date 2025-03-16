@@ -79,7 +79,7 @@
       </div>
 
       <!-- Sunscreen Reminder Settings -->
-      <!-- <div class="reminder-container">
+      <div class="reminder-container">
         <h3>Get reminded to put on sunscreen!</h3>
 
         <div class="image-container ">
@@ -125,7 +125,7 @@
             </label>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
 
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
