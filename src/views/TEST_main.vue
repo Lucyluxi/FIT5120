@@ -1,6 +1,5 @@
 <template>
   <div class="map-container">
-    <!-- 搜索 & 过滤 -->
     <div id="filter-container">
       <label for="search-location" class="form-label fw-bold">Search Location:</label>
       <input
@@ -18,7 +17,7 @@
       <button class="btn btn-primary mt-2 w-100" @click="applyFilter">Search</button>
     </div>
 
-    <!-- 地图 -->
+    <!-- Map -->
     <div id="map"></div>
   </div>
 </template>

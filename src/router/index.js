@@ -5,6 +5,7 @@ import ProductsView from '@/views/ProductsView.vue'
 import ReminderView from '@/views/ReminderView.vue'
 import UVIndexView from '@/views/UVIndexView.vue'
 import TEST_main from '@/views/TEST_main.vue'
+import New from '@/views/New.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path:'/test',
     name:'Test',
     component: TEST_main
+  },
+  {
+    path:'/new',
+    name: 'New',
+    component: New
   }
 ]
 
