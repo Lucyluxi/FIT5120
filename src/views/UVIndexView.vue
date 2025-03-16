@@ -266,7 +266,7 @@ export default {
 
       try {
         this.errorMessage = ''
-        const response = await axios.get('http://127.0.0.1:5001/fit5120-b75ac/us-central1/weatherApi/weather', {
+        const response = await axios.get('https://weatherapi-arw35vrwzq-uc.a.run.app/weather', {//http://127.0.0.1:5001/fit5120-b75ac/us-central1/weatherApi/weather
           params: { location: this.location },
         })
 
