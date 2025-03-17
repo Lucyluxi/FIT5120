@@ -5,8 +5,8 @@
       <div class="image-container">
         <img src="/images/home.jpg" class="responsive-image" alt="Beach Background" />
         <div class="image-text">
-          In 2023, it is estimated that <br />
-          <span class="highlight">18,257</span> new cases of melanoma of the  <br />
+          In 2025, it is estimated that <br />
+          <span class="highlight">16,800</span> new cases of melanoma of the  <br />
           skin will be diagnosed in Australia.
         </div>
         <router-link to="/uvindex" class="click-here">Learn how to protect yourself →</router-link>

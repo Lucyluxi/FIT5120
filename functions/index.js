@@ -33,7 +33,6 @@ app.get('/weather', async (req, res) => {
 
     const { coord, main, weather } = weatherResponse.data;
 
-    // 请求 UV Index 数据
     const uvResponse = await axios.get(UV_API_URL, {
       params: {
         lat: coord.lat,
@@ -54,5 +53,4 @@ app.get('/weather', async (req, res) => {
   }
 });
 
-// ✅ 确保 `/weather` 作为 Cloud Function 入口
 export const weatherApi = onRequest(app);

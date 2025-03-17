@@ -16,7 +16,7 @@
 
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><router-link to="/" class="nav-link px-2 link-secondary">Home</router-link></li>
-        <li><router-link to="/test" class="nav-link px-2">Map</router-link></li>
+        <li><router-link to="/test" class="nav-link px-2">UV Map</router-link></li>
         <!-- <li><router-link to="/new" class="nav-link px-2">Map</router-link></li> -->
         <li><router-link to="/uvindex" class="nav-link px-2">Protect your skin</router-link></li>
         <li><router-link to="/reminder" class="nav-link px-2">Sunscreen Reminder</router-link></li>

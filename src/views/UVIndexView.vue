@@ -5,11 +5,14 @@
       <img src="/images/sun-safety.jpg" alt="Sun Safety" />
     </div>
 
-    <h1>Weather Inquiry for VIC Region</h1>
+    <h1>Do you want to protect your skin?</h1>
+    <h3 class="h3">Enter your region:</h3>
     <div class="search-container">
       <input v-model="location" placeholder="Enter region (e.g. Melbourne)" />
-      <button @click="fetchWeather">Inquiry</button>
+      <button @click="fetchWeather">Search</button>
     </div>
+
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
     <div v-if="weatherData" class="weather-container">
       <!-- Weather Information Table -->
@@ -30,7 +33,7 @@
         </tbody>
       </table>
 
-      <!-- UV Index Gauge -->
+      <!-- UV Index bar -->
       <div class="uv-index-container">
         <div class="uv-index-bar">
           <div class="uv-indicator" :style="{ left: `${(weatherData.uvIndex / 11) * 100}%` }"></div>
@@ -44,11 +47,11 @@
         </div>
       </div>
 
+      <!--UV Index photo-->
       <div class="image-container small">
         <img src="/images/UVIndex.jpg" alt="UV Index photo" />
       </div>
 
-      <!-- Sun Protection & Sunscreen Recommendation -->
       <!-- Sun Protection & Sunscreen Recommendation -->
       <div class="sun-protection-container">
         <div class="protection-tips">
@@ -77,139 +80,46 @@
           </div>
         </div>
       </div>
-
-      <!-- Sunscreen Reminder Settings -->
-      <!-- <div class="reminder-container">
-        <h3>Get reminded to put on sunscreen!</h3>
-
-        <div class="image-container ">
-          <img src="/images/reminder.jpg" alt="Reminder" />
-        </div>
-
-        <div class="reminder-card">
-          <div class="reminder-option">
-            <label for="reminder-interval">Reminder Interval:</label>
-            <select v-model="selectedInterval" @change="updateReminder">
-              <option value="10800">Every 3 hours</option>
-              <option value="7200">Every 2 hours</option>
-              <option value="3600">Every 1 hour</option>
-              <option value="custom">Custom</option>
-            </select>
-            <input
-              v-if="selectedInterval === 'custom'"
-              type="number"
-              v-model="customInterval"
-              placeholder="Enter interval (seconds)"
-              @input="updateReminder"
-            />
-          </div>
-
-          <div class="reminder-option">
-            <label for="sunscreen-type">Sunscreen Type:</label>
-            <select v-model="sunscreenType">
-              <option value="water-resistant">Water-Resistant</option>
-              <option value="non-water-resistant">Non-Water-Resistant</option>
-            </select>
-          </div>
-
-          <div class="reminder-option">
-            <label for="spf-level">SPF Level:</label>
-            <input type="number" v-model="spfLevel" placeholder="Enter SPF (e.g., 30, 50)" />
-          </div>
-
-          <div class="reminder-option">
-            <label>Enable Reminder:</label>
-            <label class="toggle-switch">
-              <input type="checkbox" v-model="reminderActive" @change="startReminder" />
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div> -->
-    </div>
-
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-
-    <!-- Countdown Popup -->
-    <div v-if="showCountdownPopup" class="countdown-popup">
-      <div class="popup-content">
-        <h3>Reminder Active</h3>
-        <p>Reapply sunscreen in: <strong>{{ formattedCountdown }}s</strong></p>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
-import axios from 'axios'
-
+import { ref } from 'vue';
+import axios from 'axios';
 
 export default {
-  props: {
-    weatherData: Object,
-  },
-  setup(props) {
-    const weatherData = ref(null)
-    const location = ref('')
-    const errorMessage = ref('')
-    const reminderActive = ref(false)
-    const showCountdownPopup = ref(false)
-    const countdown = ref(3 * 3600)
-    const selectedInterval = ref('10800')
-    const customInterval = ref('')
-    let timer = null
-
+  setup() {
+    const weatherData = ref(null);
+    const location = ref('');
+    const errorMessage = ref('');
     const skinTone = ref('');
     const recommendedSunscreen = ref(0);
 
-    const formattedCountdown = computed(() => {
-      const hours = Math.floor(countdown.value / 3600)
-      const minutes = Math.floor((countdown.value % 3600) / 60)
-      const seconds = countdown.value % 60
-      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-    })
-
-    const updateReminder = () => {
-      if (selectedInterval.value === 'custom' && (!customInterval.value || customInterval.value <= 0)) {
-        errorMessage.value = 'Please enter a valid custom interval.'
-        return
-      }
-      errorMessage.value = ''
-    }
-
-    const startReminder = () => {
-      if (!reminderActive.value) {
-        clearInterval(timer)
-        showCountdownPopup.value = false
-        return
+    const fetchWeather = async () => {
+      if (!location.value.trim()) {
+        errorMessage.value = 'Invalid input. Please enter a valid region name';
+        return;
       }
 
-      let interval =
-        selectedInterval.value === 'custom' ? parseInt(customInterval.value) : parseInt(selectedInterval.value)
-      if (isNaN(interval) || interval <= 0) {
-        errorMessage.value = 'Invalid interval.'
-        reminderActive.value = false
-        return
-      }
+      try {
+        errorMessage.value = '';
+        const response = await axios.get('https://weatherapi-arw35vrwzq-uc.a.run.app/weather', {
+          params: { location: location.value },
+        });
 
-      countdown.value = interval
-      showCountdownPopup.value = true
-
-      timer = setInterval(() => {
-        if (countdown.value > 0) {
-          countdown.value--
-        } else {
-          clearInterval(timer)
-          showCountdownPopup.value = false
-          reminderActive.value = false
-          alert('Time to reapply your sunscreen!')
+        if (!response.data || !response.data.location) {
+          throw new Error('Invalid response');
         }
-      }, 1000)
-    }
 
-    const getRecommendedTsp = (uvIndex, tone) => {
-      if (!tone || uvIndex === undefined) return 0;
+        weatherData.value = response.data;
+      } catch (error) {
+        errorMessage.value = 'Invalid input. Please enter a valid region name';
+      }
+    };
+
+    const updateSunscreenAmount = () => {
+      if (!weatherData.value || !weatherData.value.uvIndex) return;
 
       const sunscreenTable = {
         light: [0.5, 1, 1.5, 2, 2.5],
@@ -218,67 +128,27 @@ export default {
       };
 
       let index = 0;
-      if (uvIndex >= 1 && uvIndex <= 2) index = 0;
-      else if (uvIndex >= 3 && uvIndex <= 5) index = 1;
-      else if (uvIndex >= 6 && uvIndex <= 7) index = 2;
-      else if (uvIndex >= 8 && uvIndex <= 10) index = 3;
-      else if (uvIndex >= 11) index = 4;
+      if (weatherData.value.uvIndex >= 1 && weatherData.value.uvIndex <= 2) index = 0;
+      else if (weatherData.value.uvIndex >= 3 && weatherData.value.uvIndex <= 5) index = 1;
+      else if (weatherData.value.uvIndex >= 6 && weatherData.value.uvIndex <= 7) index = 2;
+      else if (weatherData.value.uvIndex >= 8 && weatherData.value.uvIndex <= 10) index = 3;
+      else if (weatherData.value.uvIndex >= 11) index = 4;
 
-      return sunscreenTable[tone][index] || 0;
+      recommendedSunscreen.value = Math.ceil(sunscreenTable[skinTone.value][index] / 0.5);
     };
-
-  
-    const updateSunscreenAmount = () => {
-      if (!weatherData.value || !weatherData.value.uvIndex) return;
-
-      const tsp = getRecommendedTsp(weatherData.value.uvIndex, skinTone.value);
-      recommendedSunscreen.value = Math.ceil(tsp / 0.5); // 1 💧 = 0.5 tsp
-
-      console.log(`UV Index: ${weatherData.value.uvIndex}, Skin Tone: ${skinTone.value}, Recommended TSP: ${tsp}, Water Drops: ${recommendedSunscreen.value}`);
-    };
-
-    watch(() => weatherData.value?.uvIndex, updateSunscreenAmount);
 
     return {
       weatherData,
       location,
       errorMessage,
-      reminderActive,
-      showCountdownPopup,
-      countdown,
-      formattedCountdown,
-      startReminder,
-      selectedInterval,
-      customInterval,
-      updateReminder,
+      fetchWeather,
       skinTone,
       recommendedSunscreen,
-      updateSunscreenAmount
-    }
-    
+      updateSunscreenAmount,
+    };
   },
-  methods: {
-    async fetchWeather() {
-      if (!this.location) {
-        this.errorMessage = 'Please enter a valid region'
-        return
-      }
-
-      try {
-        this.errorMessage = ''
-        const response = await axios.get('https://weatherapi-arw35vrwzq-uc.a.run.app/weather', {//http://127.0.0.1:5001/fit5120-b75ac/us-central1/weatherApi/weather
-          params: { location: this.location },
-        })
-
-        this.weatherData = response.data
-      } catch (error) {
-        this.errorMessage = 'Failed to retrieve weather information. Please try again.'
-      }
-    },
-  },
-}
+};
 </script>
-
 
 <style scoped>
 /* Center align all content */
@@ -534,5 +404,14 @@ input:checked + .slider:before {
 
 .toggle-switch input {
   margin-left: 10px;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.h3{
+  margin-top: 30px;
 }
 </style>
