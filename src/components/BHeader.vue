@@ -20,6 +20,7 @@
         <!-- <li><router-link to="/new" class="nav-link px-2">Map</router-link></li> -->
         <li><router-link to="/uvindex" class="nav-link px-2">Protect your skin</router-link></li>
         <li><router-link to="/reminder" class="nav-link px-2">Sunscreen Reminder</router-link></li>
+        <li><router-link to="/statistics" class="nav-link px-2">Facts and stats</router-link></li>
         <!-- <li><router-link to="/products" class="nav-link px-2">Products</router-link></li> -->
       </ul>
 

@@ -4,8 +4,9 @@ import AboutView from '../views/AboutView.vue'
 import ProductsView from '@/views/ProductsView.vue'
 import ReminderView from '@/views/ReminderView.vue'
 import UVIndexView from '@/views/UVIndexView.vue'
-import TEST_main from '@/views/TEST_main.vue'
+import TEST_main from '@/views/Map.vue'
 import New from '@/views/New.vue'
+import Statistics from '@/views/Statistics.vue'
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path:'/new',
     name: 'New',
     component: New
+  },
+  {
+    path:'/statistics',
+    name:'Statistics',
+    component:Statistics
   }
 ]
 
