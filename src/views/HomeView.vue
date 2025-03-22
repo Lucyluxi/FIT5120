@@ -1,83 +1,109 @@
 <template>
-  <div class="row">
-    <h1 class="title">Australia's sunshine is beautiful, but it comes with hidden dangers.</h1>
-    <div class="col-12 d-flex justify-content-center">
-      <div class="image-container">
-        <img src="/images/home.jpg" class="responsive-image" alt="Beach Background" />
-        <div class="image-text">
-          In 2025, it is estimated that <br />
-          <span class="highlight">16,800</span> new cases of melanoma of the  <br />
-          skin will be diagnosed in Australia.
-        </div>
-        <router-link to="/uvindex" class="click-here">Learn how to protect yourself →</router-link>
-      </div>
+  <div class="video-background">
+    <video autoplay loop muted playsinline class="background-video">
+      <source src="/videos/bg.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="content">
+      <h1 class="title animate-fade-up">
+        Australia's sunshine is beautiful, but it comes with hidden dangers.
+      </h1>
+
+      <p class="image-text animate-fade-up" style="animation-delay: 0.4s;">
+        In 2023, it is estimated that <br />
+        <span class="highlight">18,257</span> new cases of melanoma of the skin <br />
+        will be diagnosed in Australia.
+      </p>
+
+      <a href="https://your-link-here.com" class="click-here animate-fade-up" style="animation-delay: 0.8s;">
+        Learn how to protect yourself →
+      </a>
     </div>
   </div>
 </template>
 
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-.responsive-image {
-  width: 100%;
-  height: 50vh; /* Show only the top half of the image */
-  object-fit: cover;
-  object-position: top center;
-}
-
-.image-container {
+.video-background {
   position: relative;
-  display: inline-block;
-  width: 60%;
-  height: 50vh;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 600;
-  text-align: center;
-  color: #333;
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 10%;
+  color: white;
   font-family: 'Poppins', sans-serif;
-  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .image-text {
-  position: absolute;
-  top: 30%; /* Moved text lower */
-  left: 10%; /* Align text to the left */
-  transform: translateY(-50%);
-  font-size: 2.2rem; /* Increased font size */
-  text-align: left;
-  color: #f0f8ff; /* Soft white-blue tone to match blue background */
-  font-family: 'Poppins', sans-serif;
+  font-size: 1.8rem;
   font-weight: 400;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
   max-width: 80%;
 }
 
 .highlight {
   display: block;
-  font-size: 2.8rem; /* Larger highlight text */
+  font-size: 2.5rem;
   font-weight: 600;
-  color: #ffcccb; /* Soft red to contrast with blue */
+  color: #ffcccb;
 }
 
 .click-here {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
   font-size: 1.5rem;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  margin-top: 1.5rem;
   color: white;
   text-decoration: none;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease;
 }
 
 .click-here:hover {
   transform: scale(1.1);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* ✨ Animation effect: fade in and float upward */
+.animate-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
+
 
