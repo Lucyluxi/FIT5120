@@ -104,7 +104,7 @@ export default {
 
       try {
         errorMessage.value = '';
-        const response = await axios.get('https://weatherapi-arw35vrwzq-uc.a.run.app/weather', {
+        const response = await axios.get('https://rt4r31x8o1.execute-api.ap-southeast-2.amazonaws.com/default/weatherAPI', { // https://weatherapi-arw35vrwzq-uc.a.run.app/weather
           params: { location: location.value },
         });
 

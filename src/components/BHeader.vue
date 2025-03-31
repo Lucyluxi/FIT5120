@@ -11,7 +11,7 @@
             <use xlink:href="#bootstrap"></use>
           </svg>
         </a> -->
-        <h2>UVSafe</h2>
+        <h3>UVSafe</h3>
       </div>
 
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">

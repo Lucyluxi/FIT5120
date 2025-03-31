@@ -1,0 +1,30 @@
+# serverless.yml
+service: weather-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-2
+
+functions:
+  app:
+    handler: handler.handler
+    events:
+      - http:
+          path: /weather
+          method: get
+          cors: true
+
+plugins:
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    bundle: true
+    target: node18
+    format: esm
+    platform: node
+    sourcemap: true
+
+package:
+  individually: true

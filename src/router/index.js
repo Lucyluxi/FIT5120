@@ -1,12 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
-import ProductsView from '@/views/ProductsView.vue'
-import ReminderView from '@/views/ReminderView.vue'
-import UVIndexView from '@/views/UVIndexView.vue'
-import TEST_main from '@/views/Map.vue'
-import New from '@/views/New.vue'
-import Statistics from '@/views/Statistics.vue'
 
 const routes = [
   {
@@ -35,25 +29,39 @@ const routes = [
     component: UVIndexView,
   },
   {
-    path:'/test',
-    name:'Test',
-    component: TEST_main
+    path: '/test',
+    name: 'Test',
+    component: TEST_main,
   },
   {
-    path:'/new',
+    path: '/new',
     name: 'New',
-    component: New
+    component: New,
   },
   {
-    path:'/statistics',
-    name:'Statistics',
-    component:Statistics
-  }
+    path: '/statistics',
+    name: 'Statistics',
+    component: Statistics,
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+// **Global Navigation Guard: Restrict access to the entire website**
+router.beforeEach((to, from, next) => {
+  const correctPassword = '123456' // Set your desired password
+  const enteredPassword = localStorage.getItem('site_password')
+
+  if (to.path === '/password') {
+    next() // Allow access to the password input page
+  } else if (enteredPassword === correctPassword) {
+    next() // If the password is correct, proceed to the requested page
+  } else {
+    next('/password') // Otherwise, redirect to the password page
+  }
 })
 
 export default router
